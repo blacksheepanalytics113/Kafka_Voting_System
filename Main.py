@@ -60,5 +60,40 @@ def generate_candidate_data():
         }
     else:
         return "Error fetching data"
-# generate_candidate_data()
+generate_candidate_data()
+
+# Kafka Topics
+voters_topic = 'voters_topic'
+candidates_topic = 'candidates_topic'
+
+def create_candidate_tables():
+    try:
+        connect = psycopg2.connect(
+                host= "db-postgresql-lon1-10501-do-user-15128192-0.c.db.ondigitalocean.com",
+                database= "defaultdb",
+                user= "doadmin",
+                password= "AVNS_18bVhfxQtTTBCXwY6Lw",
+                port=25060
+            )
+        cur = connect.cursor() 
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS candidates (
+                candidate_id VARCHAR(255) PRIMARY KEY,
+                candidate_name VARCHAR(255),
+                party_affiliation VARCHAR(255),
+                biography TEXT,
+                campaign_platform TEXT,
+                photo_url TEXT
+            )
+        """)
+        connect.commit()
+                    
+            # close the communication with the PostgreSQL
+        cur.close()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+   
+        print('Database connection closed.')
+create_tables()
 
