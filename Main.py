@@ -62,9 +62,6 @@ def generate_candidate_data():
         return "Error fetching data"
 # generate_candidate_data()
 
-# Kafka Topics
-voters_topic = 'voters_topic'
-candidates_topic = 'candidates_topic'
 
 def create_candidate_tables():
     try:
@@ -125,10 +122,11 @@ def create_candidate_tables():
         print(error)
    
         print('Database connection closed.')
-# create_candidate_tables()
+# # create_candidate_tables()
 
 
-def Insert_data():
+def Insert_voter_data():
+    print('Connecting To Database............')
     connect = psycopg2.connect(
                     host= "db-postgresql-lon1-10501-do-user-15128192-0.c.db.ondigitalocean.com",
                     database= "defaultdb",
@@ -165,15 +163,67 @@ def Insert_data():
             "picture": user_data['picture']['large'],
             "registered_age": user_data['registered']['age']
         })
-    
-        cur.execute("""
-                                INSERT INTO voters (voter_id, voter_name, date_of_birth, gender, nationality, registration_number, address_street, address_city, address_state, address_country, address_postcode, email, phone_number, cell_number, picture, registered_age)
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s)
-                                """,(user_data['login']['uuid'],f"{user_data['name']['first']} {user_data['name']['last']}",user_data['dob']['date'],user_data['gender'],user_data['nat'],
-                                    user_data['login']['username'],f"{user_data['location']['street']['number']} {user_data['location']['street']['name']}",
-                                    user_data['location']['city'],user_data['location']['state'],user_data['location']['country'],user_data['location']['postcode'],user_data['email'],
-                                    user_data['phone'],user_data['cell'],user_data['picture']['large'],user_data['registered']['age'])
+        # cur.execute("""
+        #             INSERT INTO voters (voter_id, voter_name, date_of_birth, gender, nationality, registration_number, address_street, address_city, address_state, address_country, address_postcode, email, phone_number, cell_number, picture, registered_age)
+        #             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s)
+        #             """,(user_data['login']['uuid'],f"{user_data['name']['first']} {user_data['name']['last']}",user_data['dob']['date'],user_data['gender'],user_data['nat'],
+        #                 user_data['login']['username'],f"{user_data['location']['street']['number']} {user_data['location']['street']['name']}",
+        #                 user_data['location']['city'],user_data['location']['state'],user_data['location']['country'],user_data['location']['postcode'],user_data['email'],
+        #                 user_data['phone'],user_data['cell'],user_data['picture']['large'],user_data['registered']['age']))
+        connect.commit()
+        cur.close()
+# Insert_voter_data()
+
+def insert_candidate_data():
+         # get candidates from db 
+    print('Connecting To Database............')
+    connect = psycopg2.connect(
+                    host= "db-postgresql-lon1-10501-do-user-15128192-0.c.db.ondigitalocean.com",
+                    database= "defaultdb",
+                    user= "doadmin",
+                    password= "AVNS_18bVhfxQtTTBCXwY6Lw",
+                    port=25060
                 )
-    connect.commit()
-    cur.close()
-Insert_data()
+    cur = connect.cursor()
+    response = requests.get(BASE_URL)
+    # print(response.json())
+    if response.status_code == 200:
+        user_data = response.json()['results'][0] 
+        cur.execute("""
+            SELECT * FROM candidates
+        """)
+        candidates = cur.fetchall()
+        # print(candidates)
+        
+        if len(candidates) == 0:
+            for candidate in range(3):
+                candidate_number = 2 == 1
+                total_parties = PARTIES[candidate_number]
+                candidate = generate_candidate_data()
+                
+                
+                # print(candidate)
+                return candidate['candidate_id']
+                return candidate['candidate_name']
+                return candidate['party_affiliation']
+                return candidate['biography']
+                return candidate['campaign_platform']
+                return candidate['photo_url']
+                # cur.execute("""INSERT INTO candidates (candidate_id,candidate_name) VALUES (%s,%s)""",str(candidate['candidate_id']),candidate['candidate_name'])
+                connect.commit()
+                cur.close()
+# insert_candidate_data()
+
+"""
+Send Data from coming API TO Kafa Topic & postreSQL Simultaneously
+voters_topic = 'voters_topic'
+candidates_topic = 'candidates_topic'
+
+"""
+
+# producer = SerializingProducer({'bootstrap.servers': 'localhost:9092',})
+for i in range(1000):
+        voter_data = generate_voter_data()
+        candidate_data = insert_candidate_data()
+        print(voter_data)
+        print(candidate_data)
