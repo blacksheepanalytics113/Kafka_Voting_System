@@ -41,7 +41,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_JMX_PORT: 9101
-      KAFKA_JMX_HOSTNAME: localhost
+      KAFKA_JMX_HOSTNAME: http://164.92.85.68/
     healthcheck:
       test: [ "CMD", "bash", "-c", 'nc -z localhost 9092' ]
       interval: 10s
@@ -52,11 +52,11 @@ services:
     image: postgres:latest
     container_name: postgres
     ports:
-      - "5432:5432"
+      - "25060:25060"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: voting
+      POSTGRES_USER: doadmin
+      POSTGRES_PASSWORD: AVNS_18bVhfxQtTTBCXwY6Lw
+      POSTGRES_DB: defaultdb
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "postgres" ]
       interval: 10s

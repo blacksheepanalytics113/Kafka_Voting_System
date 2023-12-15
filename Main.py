@@ -203,12 +203,12 @@ def insert_candidate_data():
                 
                 
                 # print(candidate)
-                return candidate['candidate_id']
-                return candidate['candidate_name']
-                return candidate['party_affiliation']
-                return candidate['biography']
-                return candidate['campaign_platform']
-                return candidate['photo_url']
+                print(candidate['candidate_id'])
+                # print(candidate['candidate_name'])
+                # print(candidate['party_affiliation'])
+                # print(candidate['biography'])
+                # print(candidate['campaign_platform'])
+                # print(candidate['photo_url'])
                 # cur.execute("""INSERT INTO candidates (candidate_id,candidate_name) VALUES (%s,%s)""",str(candidate['candidate_id']),candidate['candidate_name'])
                 connect.commit()
                 cur.close()
@@ -220,10 +220,11 @@ voters_topic = 'voters_topic'
 candidates_topic = 'candidates_topic'
 
 """
-
-# producer = SerializingProducer({'bootstrap.servers': 'localhost:9092',})
-for i in range(1000):
-        voter_data = generate_voter_data()
-        candidate_data = insert_candidate_data()
-        print(voter_data)
-        print(candidate_data)
+def Produce_kafka():
+    producer = SerializingProducer({'bootstrap.servers': 'http://164.92.85.68/:9092',})
+    for i in range(1000):
+            voter_data = generate_voter_data()
+            candidate_data = insert_candidate_data()
+            print(voter_data)
+            print(candidate_data)
+Produce_kafka()
