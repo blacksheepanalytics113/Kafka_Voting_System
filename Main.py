@@ -222,12 +222,19 @@ candidates_topic = 'candidates_topic'
 
 """
 def Produce_kafka():
+    from kafka import KafkaProducer
+    from json import dumps
+    import json
     kafka_host = "164.92.85.68"
-    producer = SerializingProducer({'bootstrap.servers': f'{kafka_host}:29092',})
+    producer = KafkaProducer(bootstrap_servers=['164.92.85.68:9092'], #change ip here
+                         value_serializer=lambda x:dumps(x).encode('utf-8'))
+   
+    # producer = SerializingProducer({'bootstrap.servers': f'{kafka_host}',})
     for i in range(1000):
             create_Tables = create_candidate_tables()
             voter_data = generate_voter_data()
             candidate_data = insert_candidate_data()
             print(voter_data)
             print(candidate_data)
+            print(producer.send('demo_test', value=voter_data))
 Produce_kafka()
