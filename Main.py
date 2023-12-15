@@ -1,4 +1,5 @@
 import random
+import kafka
 import psycopg2
 import requests
 import simplejson as json
@@ -222,7 +223,7 @@ candidates_topic = 'candidates_topic'
 """
 def Produce_kafka():
     kafka_host = "164.92.85.68"
-    producer = SerializingProducer({'bootstrap.servers': '{localhost:9092',})
+    producer = SerializingProducer({'bootstrap.servers': f'{kafka_host}:29092',})
     for i in range(1000):
             voter_data = generate_voter_data()
             candidate_data = insert_candidate_data()
