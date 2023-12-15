@@ -222,7 +222,7 @@ candidates_topic = 'candidates_topic'
 """
 def Produce_kafka():
     kafka_host = "164.92.85.68"
-    producer = SerializingProducer({'bootstrap.servers': '{164.92.85.68:9092',})
+    producer = SerializingProducer({'bootstrap.servers': '{localhost:9092',})
     for i in range(1000):
             voter_data = generate_voter_data()
             candidate_data = insert_candidate_data()
