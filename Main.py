@@ -225,6 +225,7 @@ def Produce_kafka():
     kafka_host = "164.92.85.68"
     producer = SerializingProducer({'bootstrap.servers': f'{kafka_host}:29092',})
     for i in range(1000):
+            create_Tables = create_candidate_tables()
             voter_data = generate_voter_data()
             candidate_data = insert_candidate_data()
             print(voter_data)
