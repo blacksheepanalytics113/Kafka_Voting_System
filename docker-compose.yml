@@ -42,11 +42,24 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_JMX_PORT: 9101
       KAFKA_JMX_HOSTNAME: 164.92.85.68
+      entrypoint: >
+              /bin/sh -c '
+              for attempt in $(seq 1 5); do
+                if nc -z 164.92.85.68 9092; then
+                  echo "Kafka is reachable. Continuing with startup."
+                  break
+                else
+                  echo "Attempt $attempt: Kafka is not reachable. Retrying in 10 seconds..."
+                  sleep 10
+                fi
+              done
+              exec /etc/confluent/docker/run
+              '
     healthcheck:
       test: [ "CMD", "bash", "-c", 'nc -z 164.92.85.68 9092' ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 20s
+      timeout: 60s
+      retries: 10
 
   postgres:
     image: postgres:latest

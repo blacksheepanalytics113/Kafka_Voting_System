@@ -211,9 +211,9 @@ def insert_candidate_data():
                 
                 # print(candidate)
                 print(candidate['candidate_id'])
-                # print(candidate['candidate_name'])
-                # print(candidate['party_affiliation'])
-                # print(candidate['biography'])
+                print(candidate['candidate_name'])
+                print(candidate['party_affiliation'])
+                print(candidate['biography'])
                 # print(candidate['campaign_platform'])
                 # print(candidate['photo_url'])
                 # cur.execute("""INSERT INTO candidates (candidate_id,candidate_name) VALUES (%s,%s)""",str(candidate['candidate_id']),candidate['candidate_name'])
@@ -251,10 +251,11 @@ def Produce_kafka():
             print(voter_data)
             print(candidate_data)
             print(inserted_voters_data)
+            # Produce a message to a Kafka topic
             producer.produce(voters_topic,key=user_data['login']['uuid'],value=json.dumps(voter_data),
             on_delivery=delivery_report
         )
 
             print('Produced voter {}, data: {}'.format(i, voter_data))
-            producer.flush()     
+            producer.flush()
 Produce_kafka()
