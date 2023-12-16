@@ -1,6 +1,7 @@
 import random
 import kafka
 import psycopg2
+from pykafka import Producer
 import requests
 import simplejson as json
 from confluent_kafka import SerializingProducer
@@ -10,6 +11,11 @@ from confluent_kafka import SerializingProducer
 BASE_URL = 'https://randomuser.me/api/?nat=gb'
 PARTIES = ["Management Party", "Savior Party", "Tech Republic Party"]
 random.seed(42)
+
+response = requests.get(BASE_URL)
+    # print(response.json())
+# response.status_code = 200
+user_data = response.json()['results'][0]
 
 
 def generate_voter_data():
@@ -66,7 +72,7 @@ def generate_candidate_data():
 
 def create_candidate_tables():
     try:
-        print("connecting To PostgreSQL")
+        print("Connecting To Database............")
         connect = psycopg2.connect(
                     host= "db-postgresql-lon1-10501-do-user-15128192-0.c.db.ondigitalocean.com",
                     database= "defaultdb",
@@ -164,13 +170,13 @@ def Insert_voter_data():
             "picture": user_data['picture']['large'],
             "registered_age": user_data['registered']['age']
         })
-        # cur.execute("""
-        #             INSERT INTO voters (voter_id, voter_name, date_of_birth, gender, nationality, registration_number, address_street, address_city, address_state, address_country, address_postcode, email, phone_number, cell_number, picture, registered_age)
-        #             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s)
-        #             """,(user_data['login']['uuid'],f"{user_data['name']['first']} {user_data['name']['last']}",user_data['dob']['date'],user_data['gender'],user_data['nat'],
-        #                 user_data['login']['username'],f"{user_data['location']['street']['number']} {user_data['location']['street']['name']}",
-        #                 user_data['location']['city'],user_data['location']['state'],user_data['location']['country'],user_data['location']['postcode'],user_data['email'],
-        #                 user_data['phone'],user_data['cell'],user_data['picture']['large'],user_data['registered']['age']))
+        cur.execute("""
+                    INSERT INTO voters (voter_id, voter_name, date_of_birth, gender, nationality, registration_number, address_street, address_city, address_state, address_country, address_postcode, email, phone_number, cell_number, picture, registered_age)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s)
+                    """,(user_data['login']['uuid'],f"{user_data['name']['first']} {user_data['name']['last']}",user_data['dob']['date'],user_data['gender'],user_data['nat'],
+                        user_data['login']['username'],f"{user_data['location']['street']['number']} {user_data['location']['street']['name']}",
+                        user_data['location']['city'],user_data['location']['state'],user_data['location']['country'],user_data['location']['postcode'],user_data['email'],
+                        user_data['phone'],user_data['cell'],user_data['picture']['large'],user_data['registered']['age']))
         connect.commit()
         cur.close()
 # Insert_voter_data()
@@ -221,20 +227,34 @@ voters_topic = 'voters_topic'
 candidates_topic = 'candidates_topic'
 
 """
+def delivery_report(err, msg):
+    if err is not None:
+        print(f'Message delivery failed: {err}')
+    else:
+        print(f'Message delivered to {msg.topic()} [{msg.partition()}]')
+# delivery_report()
+
 def Produce_kafka():
-    from kafka import KafkaProducer
-    from json import dumps
-    import json
+    # from kafka import KafkaProducer
+    # from json import dumps
+    # import json
     kafka_host = "164.92.85.68"
-    producer = KafkaProducer(bootstrap_servers=['164.92.85.68:9092'], #change ip here
-                         value_serializer=lambda x:dumps(x).encode('utf-8'))
-   
-    # producer = SerializingProducer({'bootstrap.servers': f'{kafka_host}',})
+    # Kafka Topics
+    voters_topic = 'voters_topic'
+    candidates_topic = 'candidates_topic'
+    producer = SerializingProducer({'bootstrap.servers': f'{kafka_host}',})
     for i in range(1000):
             create_Tables = create_candidate_tables()
             voter_data = generate_voter_data()
+            inserted_voters_data =  Insert_voter_data()
             candidate_data = insert_candidate_data()
             print(voter_data)
             print(candidate_data)
-            print(producer.send('demo_test', value=voter_data))
+            print(inserted_voters_data)
+            producer.produce(voters_topic,key=user_data['login']['uuid'],value=json.dumps(voter_data),
+            on_delivery=delivery_report
+        )
+
+            print('Produced voter {}, data: {}'.format(i, voter_data))
+            producer.flush()     
 Produce_kafka()
