@@ -57,8 +57,3 @@ def consume_kafka_messages():
         print(error)
    
         print('Database connection closed.')
-
-
-if __name__ == "__main__":
-    conn = psycopg2.connect("host=localhost dbname=voting user=postgres password=postgres")
-    cur = conn.cursor()

@@ -252,7 +252,9 @@ def Produce_kafka():
             print(candidate_data)
             print(inserted_voters_data)
             # Produce a message to a Kafka topic
-            producer.produce(voters_topic,key=user_data['login']['uuid'],value=json.dumps(voter_data),
+            producer.produce(voters_topic,
+                             key=user_data['login']['uuid'],
+                             value=json.dumps(voter_data),
             on_delivery=delivery_report
         )
 
