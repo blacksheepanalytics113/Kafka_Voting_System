@@ -4,7 +4,7 @@ from datetime import datetime
 import psycopg2
 import simplejson as json
 from confluent_kafka import Consumer,KafkaException,KafkaError,serializing_producer,ConsumerGroupState,SerializingProducer
-from Main import delivery_report
+from Stream import delivery_report
 
 kafka_host = "164.92.85.68"
 conf = {
@@ -29,7 +29,7 @@ def consume_kafka_messages():
         cur = connect.cursor() 
         producer = SerializingProducer(conf)
         result = []
-        consumer.subscribe(['candidates_topic'])
+        consumer.subscribe(['voters_topic'])
         try:
             while True:
                 msg = consumer.poll(timeout=1.0)
