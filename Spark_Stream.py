@@ -16,7 +16,7 @@ print(pyspark.__version__)
 
     # Initialize SparkSession
 spark = (SparkSession.builder
-            .appName("ElectionAnalysis")
+            .appName("KafkaElectionAnalysis")
              .master("local[*]")  
              .config("spark.jars.packages",
                      "org.apache.spark:spark-sql-kafka-0-10_2.13:3.5.0")  
