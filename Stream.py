@@ -238,7 +238,7 @@ def Produce_kafka():
     # from kafka import KafkaProducer
     # from json import dumps
     # import json
-    kafka_host = "164.92.85.68"
+    kafka_host = "164.92.85.68:9092"
     # Kafka Topics
     voters_topic = 'voters_topic'
     candidates_topic = 'candidates_topic'
@@ -248,9 +248,10 @@ def Produce_kafka():
             voter_data = generate_voter_data()
             inserted_voters_data =  Insert_voter_data()
             candidate_data = insert_candidate_data()
-            print(voter_data)
-            print(candidate_data)
-            print(inserted_voters_data)
+            # print(voter_data)
+            # print(candidate_data)
+            # print(inserted_voters_data)
+            
             # Produce a message to a Kafka topic
             producer.produce(voters_topic,
                              key=user_data['login']['uuid'],
@@ -260,4 +261,4 @@ def Produce_kafka():
 
             print('Produced voter {}, data: {}'.format(i, voter_data))
             producer.flush()
-Produce_kafka()
+# Produce_kafka()
