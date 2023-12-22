@@ -46,7 +46,7 @@ def fetch_and_insert_messages():
     # consumer = Consumer(consumer)
     consumer = consumer
     consumer.subscribe(topics='voters_topic')
-    print("subscribed")
+    print("subscribed.......")
     
 
     start_time = time.time()

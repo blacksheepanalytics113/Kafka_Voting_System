@@ -1,5 +1,8 @@
 """Script for processing kafka streams 
+#############################################################
+import pyspark and its configuration
 """
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col
 from pyspark.sql.functions import sum as _sum
@@ -14,21 +17,26 @@ import pyspark
 
 print(pyspark.__version__)
 
+
+
     # Initialize SparkSession
-spark = (SparkSession.builder
-            .appName("KafkaElectionAnalysis")
-             .master("local[*]")  
-             .config("spark.jars.packages",
-                     "org.apache.spark:spark-sql-kafka-0-10_2.13:3.5.0")  
-             .config("spark.jars",
-                     "C:/Users/user/Desktop/Kafka_Voting_System/jar/postgresql-42.7.1")  
-             .config("spark.sql.adaptive.enabled", "false")).getOrCreate()
-
-from pyspark.sql import SparkSession
-
-# Now you have a Spark session named 'spark' that you can use for Spark operations.
-
+spark = (SparkSession.builder\
+    .master("local[1]") 
+    .appName("KafkaElectionAnalysis")   
+    .config("spark.jars.packages",
+            "org.apache.spark:spark-sql-kafka-0-10_2.13:3.5.0")  
+    .config("spark.jars",
+            "C:/Users/user/Desktop/Kafka_Voting_System/jar/postgresql-42.7.1.jar")
+    .config("spark.sql.adaptive.enabled", "false")
+    .config("spark.hadoop.fs.AbstractFileSystem.s3a.impl", "org.apache.hadoop.fs.local.LocalFs")
+    .config("spark.hadoop.fs.AbstractFileSystem.s3.impl", "org.apache.hadoop.fs.local.LocalFs")
+    .getOrCreate())
+spark.conf.set("spark.hadoop.fs.AbstractFileSystem.s3a.impl", "org.apache.hadoop.fs.local.LocalFs")
+spark.conf.set("spark.hadoop.fs.AbstractFileSystem.s3.impl", "org.apache.hadoop.fs.local.LocalFs")
 # print(spark)
+# print("First SparkContext:" {spark.keys()})
+
+
 
 # Define schemas for Kafka topics
 vote_schema = StructType([
