@@ -22,9 +22,14 @@ spark = (SparkSession.builder
                      "org.apache.spark:spark-sql-kafka-0-10_2.13:3.5.0")  
              .config("spark.jars",
                      "C:/Users/user/Desktop/Kafka_Voting_System/jar/postgresql-42.7.1")  
-             .config("spark.sql.adaptive.enabled", "false") 
-             .getOrCreate())
+             .config("spark.sql.adaptive.enabled", "false")).getOrCreate()
+
+from pyspark.sql import SparkSession
+
+# Now you have a Spark session named 'spark' that you can use for Spark operations.
+
 # print(spark)
+
 # Define schemas for Kafka topics
 vote_schema = StructType([
         StructField("voter_id", StringType(), True),
