@@ -1,7 +1,7 @@
 import random
 import kafka
 import psycopg2
-from pykafka import Producer
+# from pykafka import Producer
 import requests
 import simplejson as json
 from confluent_kafka import SerializingProducer
