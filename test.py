@@ -62,6 +62,7 @@ def create_or_get_spark() -> SparkSession:
 def define_schema_and_insert():
 # Define schemas for Kafka topics
     spark = create_or_get_spark()
+    print(spark)
     vote_schema = StructType([
             StructField("voter_id", StringType(), True),
             StructField("candidate_id", StringType(), True),
@@ -90,7 +91,7 @@ def define_schema_and_insert():
             StructField("registered_age", IntegerType(), True),
             StructField("vote", IntegerType(), True)
         ])
-    print(vote_schema)
+    # print(vote_schema)
 
     #  # Read data from Kafka 'votes_topic' and process it
     KAFKA_BOOTSTRAP_SERVER = "164.92.85.68" + ":9092"
