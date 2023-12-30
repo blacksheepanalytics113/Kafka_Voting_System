@@ -51,7 +51,7 @@ def create_or_get_spark() -> SparkSession:
             "spark.jars.packages",
             "org.apache.spark:spark-sql-kafka-0-10_2.13:3.5.0"
         )
-        .master(cluster_manager)
+        .master("spark://164.92.85.68:7077")
         .getOrCreate()
     )
     return spark
@@ -59,10 +59,10 @@ def create_or_get_spark() -> SparkSession:
 
 
 
-def define_schema_and_insert():
+def define_read_Stream():
 # Define schemas for Kafka topics
     spark = create_or_get_spark()
-    print(spark)
+    # print(spark)
     vote_schema = StructType([
             StructField("voter_id", StringType(), True),
             StructField("candidate_id", StringType(), True),
@@ -100,13 +100,21 @@ def define_schema_and_insert():
         .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVER) \
         .option("subscribe", "voters_topic") \
         .option("startingOffsets", "earliest") \
-        .load() \
-        .selectExpr("CAST(value AS STRING)") \
-        .select(from_json(col("value"), vote_schema).alias("data")) \
-        .select("data.*")
+        .option(
+            "key.deserializer",
+            "org.apache.kafka.common.serialization.StringDeserializer",
+        ) \
+        .option(
+            "value.deserializer",
+            "org.apache.kafka.common.serialization.StringDeserializer",
+        ) \
+        .option("failOnDataLoss", False) \
+        .load() 
+        # .selectExpr("CAST(value AS STRING)") \
+        # .select(from_json(col("value"), vote_schema).alias("data")) \
+        # .select("data.*")
     print(votes_df)
-define_schema_and_insert()
-
+define_read_Stream()
 
 #  # Data preprocessing: type casting and watermarking
 # votes_df = votes_df.withColumn("voting_time", col("voting_time").cast(TimestampType())) \
