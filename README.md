@@ -25,3 +25,6 @@ This repository contains the code for a realtime election voting system. The sys
  
 docker exec -it container_name kafka-console-consumer --topic topic_name --bootstrap-server localhost:9092 --from-beginning
  ```
+
+Data Produced into kafka Topics
+![Screenshot (53)](https://github.com/adunajiye/Kafka_Voting_System/assets/80220180/2c9267f1-865c-469e-9337-e0da851523e3)
