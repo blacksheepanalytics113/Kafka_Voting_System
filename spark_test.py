@@ -80,7 +80,6 @@ def create_or_get_spark():
     return spark 
 # create_or_get_spark()
 
-
 def define_read_Stream():
 # Define schemas for Kafka topics
     """_summary_
@@ -132,17 +131,18 @@ def define_read_Stream():
      # Read data from Kafka 'votes_topic' and process it
     KAFKA_BOOTSTRAP_SERVER = "164.92.85.68" + ":9092"
     print(KAFKA_BOOTSTRAP_SERVER)
-    stream = (
-        spark.readStream.format("kafka") \
-        .option("kafka.bootstrap.servers", "164.92.85.68" + ":9092") \
-        .option("subscribe", "voters_topic") \
-        .load() \
-        .selectExpr("CAST(value AS STRING)") \
-        .select(from_json(col("value"), vote_schema).alias("data")) \
-        .select("data.*")
-    )
+    # stream = (
+    #     spark.readStream.format("kafka") \
+    #     .option("kafka.bootstrap.servers", "164.92.85.68" + ":9092") \
+    #     .option("subscribe", "voters_topic") \
+    #     .load() \
+    #     .selectExpr("CAST(value AS STRING)") \
+    #     .select(from_json(col("value"), vote_schema).alias("data")) \
+    #     .select("data.*")
+    # )
+    stream = spark
     print(stream)
-     # Data preprocessing: type casting and watermarking
+    #  # Data preprocessing: type casting and watermarking
     # votes_df = stream.withColumn("voting_time", col("voting_time").cast(TimestampType())) \
     #         .withColumn('vote', col('vote').cast(IntegerType()))
     # print(votes_df)
@@ -178,7 +178,3 @@ def define_read_Stream():
     # votes_per_candidate_to_kafka.awaitTermination()
     # turnout_by_location_to_kafka.awaitTermination()
 define_read_Stream()
-
-
-
-

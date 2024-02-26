@@ -47,6 +47,19 @@ services:
       interval: 20s
       timeout: 60s
       retries: 10
+     
+    kibana:
+      image: docker.elastic.co/kibana/kibana:7.13.2
+      container_name: kibana
+      ports:
+        - "5601:5601"
+      environment:
+        - ELASTICSEARCH_URL=http://elasticsearch:9200
+        - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      depends_on:
+        - elasticsearch
+      networks:
+        - backend
 
   postgres:
     image: postgres:latest

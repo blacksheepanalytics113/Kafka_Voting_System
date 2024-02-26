@@ -26,8 +26,8 @@ def fetch_and_insert_messages():
                 )
     cur = connect.cursor()
     # topic = kafka_create_topic_main()
-    topic = 'Voters_topic'
-    print("starting Kafka....")
+    topic = 'voters_topic'
+    print("starting Kafka.........")
     KAFKA_BOOTSTRAP_SERVER = "164.92.85.68" + ":9092"
     consumer = KafkaConsumer(bootstrap_servers = KAFKA_BOOTSTRAP_SERVER,
         group_id = "cassandra_consumer_group",
@@ -35,11 +35,6 @@ def fetch_and_insert_messages():
         value_deserializer = lambda v: json.loads(v.decode('utf-8'))
         )
     print("Set up Kafka..............")
-    # kafka_config = {
-    #     'bootstrap.servers': '164.92.85.68:9092',
-    #     'group.id': 'cassandra_consumer_group',
-    #     'auto.offset.reset': 'earliest'
-    # }
     topic = topic
     run_duration_secs = 30
 
@@ -86,17 +81,7 @@ def fetch_and_insert_messages():
 fetch_and_insert_messages()
         
 
-# def Consume_votes():
-#     kafka_host = "164.92.85.68"
-#     conf = {
-#         'bootstrap.servers':  f'{kafka_host}:9092',
-#     }
 
-    # consumer = Consumer(conf | {
-    #     'group.id': 'voting-group',
-    #     'auto.offset.reset': 'earliest',
-    #     'enable.auto.commit': False
-    # })
 # def consume_kafka_messages():
 #     try:
 #         print("Connecting To Database............")
@@ -113,11 +98,11 @@ fetch_and_insert_messages()
 #         print(KAFKA_TOPIC_NAME)
 
 #         print("starting Kafka....")
-        # consumer = KafkaConsumer(
-        # bootstrap_servers=KAFKA_BOOTSTRAP_SERVER,
-        # value_deserializer = lambda v: json.loads(v.decode('utf-8')),
-        # auto_offset_reset='earliest'
-        # )
+#         consumer = KafkaConsumer(
+#         bootstrap_servers=KAFKA_BOOTSTRAP_SERVER,
+#         value_deserializer = lambda v: json.loads(v.decode('utf-8')),
+#         auto_offset_reset='earliest'
+#         )
 
 #         print("setup Kafka....")
 #         consumer.subscribe(topics='voters_topic')

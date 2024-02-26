@@ -261,4 +261,4 @@ def Produce_kafka():
 
             print('Produced voter {}, data: {}'.format(i, voter_data))
             producer.flush()
-# Produce_kafka()
+Produce_kafka()
