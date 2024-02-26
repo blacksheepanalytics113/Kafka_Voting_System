@@ -47,7 +47,7 @@ services:
       interval: 20s
       timeout: 60s
       retries: 10
-      
+
   elasticsearch:  # Added Elasticsearch service
     image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
     container_name: elasticsearch
@@ -101,3 +101,6 @@ services:
      SPARK_WORKER_CORES: 2
      SPARK_WORKER_MEMORY: 1g
      SPARK_MASTER_URL: spark://spark-master:7077
+
+networks:
+  backend:
